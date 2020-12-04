@@ -3,12 +3,14 @@ import './dashboard.css'
 import {mdiSchool } from '@mdi/js';
 import Rectangle from '../Rectangle'
 import CardsList from '../CardsList/cardsList';
+import { getData } from '../../services/requests';
 
 const cards = [
     {name: "Ciência da computação", amount:"02", icon:mdiSchool},
     {name: "Atividades Próximas", amount:"02", icon:mdiSchool},
     {name: "Alunos online", amount:"785", icon:mdiSchool},
 ]
+
 
 const cardsList = cards.map((card, index) => (
     <Rectangle
@@ -18,31 +20,43 @@ const cardsList = cards.map((card, index) => (
     />
 ))
 
-const activities = [
-    {
-        image: "https://i.imgur.com/aadwyfC.jpg",
-        name: "Algoritmos e Programação",
-        title: "Enviar arquivos Peter Smokes",
-        extra: "10/10/2020"
-    },
-    {
-        image: "https://i.imgur.com/RgQrlAS.jpg",
-        name: "Projeto de Banco de Dados",
-        title: "Enviar o esquema MySQL",
-        extra: "10/10/2020"
+class Dashboard extends React.Component {
+    state = {
+        activities: []
     }
-]
 
-function Dashboard(props){
-    return(
-        <div className="Dashboard">
-            <div className="list-title">Resume</div>
-            <div className="cards-list">{cardsList}</div>
-            <div style={{marginTop: "34px"}}>
-                <CardsList title="Próximas atividades" cards={activities}></CardsList>
+    componentDidMount() {
+        this.fetchData()
+    }
+
+    fetchData() {
+        getData().then(response => {
+            // console.log(response)
+            const activities = response.data[0].nextActivities.map(activity => {
+                return {
+                    image: activity.image,
+                    name: activity.course,
+                    title: activity.title,
+                    extra: activity.deadline
+                }
+            })
+            this.setState({ activities })
+        })
+    }
+
+    render() {
+        const { cardsList, activities } = this.state
+        console.log(activities)
+        return(
+            <div className="Dashboard">
+                <div className="list-title">Resume</div>
+                <div className="cards-list">{cardsList}</div>
+                <div style={{marginTop: "34px"}}>
+                    <CardsList title="Próximas atividades" cards={activities}></CardsList>
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 
