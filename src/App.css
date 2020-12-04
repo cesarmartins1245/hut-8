@@ -11,11 +11,19 @@ html {
     padding: 85px 112px;
 }
 
+.list-title {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 35px;
+    color: #555555;
+}
+
 .cards-list {
     display: flex;
     flex-wrap: wrap;
 }
 
-.cards-list .Rectangle{
+.cards-list > div{
     margin: 17px 34px 17px 0;
 }
